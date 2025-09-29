@@ -1,0 +1,106 @@
+# Deck (UI)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spinnaker-deck
+  namespace: spinnaker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spinnaker-deck
+  template:
+    metadata:
+      labels:
+        app: spinnaker-deck
+    spec:
+      containers:
+      - name: spinnaker-deck
+        image: ghcr.io/spinnaker/deck:1.26.0
+        ports:
+        - containerPort: 9000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spinnaker-deck
+  namespace: spinnaker
+spec:
+  selector:
+    app: spinnaker-deck
+  ports:
+    - port: 9000
+      targetPort: 9000
+
+---
+
+# Gate (API Gateway)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spinnaker-gate
+  namespace: spinnaker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spinnaker-gate
+  template:
+    metadata:
+      labels:
+        app: spinnaker-gate
+    spec:
+      containers:
+      - name: spinnaker-gate
+        image: ghcr.io/spinnaker/gate:1.26.0
+        ports:
+        - containerPort: 8084
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spinnaker-gate
+  namespace: spinnaker
+spec:
+  selector:
+    app: spinnaker-gate
+  ports:
+    - port: 8084
+      targetPort: 8084
+
+---
+
+# Clouddriver (connects Spinnaker to K8s, GCP, AWS, etc.)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spinnaker-clouddriver
+  namespace: spinnaker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spinnaker-clouddriver
+  template:
+    metadata:
+      labels:
+        app: spinnaker-clouddriver
+    spec:
+      containers:
+      - name: spinnaker-clouddriver
+        image: ghcr.io/spinnaker/clouddriver:1.26.0
+        ports:
+        - containerPort: 7002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spinnaker-clouddriver
+  namespace: spinnaker
+spec:
+  selector:
+    app: spinnaker-clouddriver
+  ports:
+    - port: 7002
+      targetPort: 7002
+

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spinnaker-redis-master
+  namespace: spinnaker
+  labels:
+    app: spinnaker-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spinnaker-redis
+  template:
+    metadata:
+      labels:
+        app: spinnaker-redis
+    spec:
+      containers:
+        - name: redis
+          image: docker.io/bitnami/redis:7.0.11-debian-11-r0
+          args: ["--appendonly", "no"]
+          env:
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
+          ports:
+            - containerPort: 6379
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spinnaker-redis-master
+  namespace: spinnaker
+spec:
+  type: ClusterIP
+  selector:
+    app: spinnaker-redis
+  ports:
+    - name: redis
+      port: 6379
+      targetPort: 6379

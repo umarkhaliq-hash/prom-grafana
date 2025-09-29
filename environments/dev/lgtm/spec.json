@@ -1,0 +1,14 @@
+{
+  "apiVersion": "tanka.dev/v1alpha1",
+  "kind": "Environment",
+  "metadata": {
+    "name": "lgtm"
+  },
+  "spec": {
+    "contextNames": ["minikube"],
+    "namespace": "lgtm",
+    "resourceDefaults": {},
+    "expectVersions": {}
+  }
+}
+
