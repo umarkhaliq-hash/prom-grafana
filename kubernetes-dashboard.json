@@ -1,0 +1,186 @@
+{
+  "id": null,
+  "title": "🚀 Complete Kubernetes Dashboard",
+  "tags": ["kubernetes", "cluster", "nodes"],
+  "timezone": "browser",
+  "panels": [
+    {
+      "id": 1,
+      "title": "🏗️ Cluster Overview",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "count(kube_node_info)",
+          "legendFormat": "Nodes"
+        },
+        {
+          "expr": "count(kube_pod_info)",
+          "legendFormat": "Total Pods"
+        },
+        {
+          "expr": "count(kube_deployment_status_replicas)",
+          "legendFormat": "Deployments"
+        },
+        {
+          "expr": "count(kube_namespace_created)",
+          "legendFormat": "Namespaces"
+        }
+      ],
+      "gridPos": {"h": 6, "w": 24, "x": 0, "y": 0}
+    },
+    {
+      "id": 2,
+      "title": "💾 Cluster Resource Usage",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(kube_pod_container_resource_requests{resource=\"cpu\"}) / sum(kube_node_status_allocatable{resource=\"cpu\"}) * 100",
+          "legendFormat": "CPU Requested %"
+        },
+        {
+          "expr": "sum(kube_pod_container_resource_requests{resource=\"memory\"}) / sum(kube_node_status_allocatable{resource=\"memory\"}) * 100",
+          "legendFormat": "Memory Requested %"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        }
+      },
+      "gridPos": {"h": 6, "w": 12, "x": 0, "y": 6}
+    },
+    {
+      "id": 3,
+      "title": "🖥️ Node Status",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(kube_node_status_condition{condition=\"Ready\", status=\"true\"})",
+          "legendFormat": "Ready Nodes"
+        },
+        {
+          "expr": "sum(kube_node_status_condition{condition=\"Ready\", status=\"false\"})",
+          "legendFormat": "Not Ready"
+        }
+      ],
+      "gridPos": {"h": 6, "w": 12, "x": 12, "y": 6}
+    },
+    {
+      "id": 4,
+      "title": "📊 Pod Status by Namespace",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum by (namespace) (kube_pod_status_phase{phase=\"Running\"})",
+          "legendFormat": "{{namespace}} Running"
+        },
+        {
+          "expr": "sum by (namespace) (kube_pod_status_phase{phase=\"Pending\"})",
+          "legendFormat": "{{namespace}} Pending"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12}
+    },
+    {
+      "id": 5,
+      "title": "🔄 Deployment Status",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "kube_deployment_status_replicas",
+          "legendFormat": "{{deployment}} Desired"
+        },
+        {
+          "expr": "kube_deployment_status_replicas_available",
+          "legendFormat": "{{deployment}} Available"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12}
+    },
+    {
+      "id": 6,
+      "title": "💻 Node CPU Usage",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+          "legendFormat": "{{instance}} CPU"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 20}
+    },
+    {
+      "id": 7,
+      "title": "💾 Node Memory Usage",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "100 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100)",
+          "legendFormat": "{{instance}} Memory"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 20}
+    },
+    {
+      "id": 8,
+      "title": "📋 Resource Requests vs Limits",
+      "type": "table",
+      "targets": [
+        {
+          "expr": "sum by (namespace) (kube_pod_container_resource_requests{resource=\"cpu\"})",
+          "format": "table"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 28}
+    },
+    {
+      "id": 9,
+      "title": "🔍 Pod Restarts",
+      "type": "table",
+      "targets": [
+        {
+          "expr": "sum by (namespace, pod) (kube_pod_container_status_restarts_total)",
+          "format": "table"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 28}
+    },
+    {
+      "id": 10,
+      "title": "🌐 Cluster Health Summary",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "node_load1",
+          "legendFormat": "Load 1m"
+        },
+        {
+          "expr": "count(kube_pod_status_phase{phase=\"Running\"})",
+          "legendFormat": "Running Pods"
+        },
+        {
+          "expr": "count(kube_node_status_condition{condition=\"Ready\", status=\"true\"})",
+          "legendFormat": "Ready Nodes"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 36}
+    }
+  ],
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "refresh": "30s",
+  "schemaVersion": 30,
+  "version": 1
+}

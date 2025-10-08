@@ -26,7 +26,12 @@ local params = import '../../../lib/app.libsonnet';
   )
   + k.apps.v1.deployment.metadata.withNamespace(params.namespace)
   + k.apps.v1.deployment.spec.selector.withMatchLabels({app: params.appName})
-  + k.apps.v1.deployment.spec.template.metadata.withLabels({app: params.appName}),
+  + k.apps.v1.deployment.spec.template.metadata.withLabels({app: params.appName})
+  + k.apps.v1.deployment.spec.template.metadata.withAnnotations({
+      'prometheus.io/scrape': 'true',
+      'prometheus.io/port': '5000',
+      'prometheus.io/path': '/metrics'
+    }),
 
   // Service resource
   service: k.core.v1.service.new(

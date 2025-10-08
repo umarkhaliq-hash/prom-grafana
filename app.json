@@ -1,0 +1,401 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "🚀 Faseeh's Application Dashboard",
+    "description": "Beautiful monitoring dashboard for webapp and screener-app with comprehensive metrics",
+    "tags": ["applications", "webapp", "screener", "monitoring"],
+    "timezone": "browser",
+    "editable": true,
+    "graphTooltip": 1,
+    "panels": [
+      {
+        "id": 1,
+        "title": "🌐 WebApp CPU Usage",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "rate(process_cpu_seconds_total{app=\"webapp\"}[5m]) * 100",
+            "refId": "A",
+            "legendFormat": "{{kubernetes_pod_name}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "percent",
+            "min": 0,
+            "max": 100
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "bottom"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "id": 2,
+        "title": "📱 Screener App CPU Usage",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "rate(process_cpu_seconds_total{app=\"screener-app\"}[5m]) * 100",
+            "refId": "A",
+            "legendFormat": "{{kubernetes_pod_name}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "percent",
+            "min": 0,
+            "max": 100
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "bottom"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        }
+      },
+      {
+        "id": 3,
+        "title": "🧠 WebApp Memory Usage",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "process_resident_memory_bytes{app=\"webapp\"} / 1024 / 1024",
+            "refId": "A",
+            "legendFormat": "{{kubernetes_pod_name}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "decbytes",
+            "min": 0
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "bottom"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        }
+      },
+      {
+        "id": 4,
+        "title": "🧠 Screener App Memory Usage",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "process_resident_memory_bytes{app=\"screener-app\"} / 1024 / 1024",
+            "refId": "A",
+            "legendFormat": "{{kubernetes_pod_name}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "decbytes",
+            "min": 0
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "bottom"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        }
+      },
+      {
+        "id": 5,
+        "title": "🌐 WebApp Request Rate",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(rate(flask_http_request_total{app=\"webapp\"}[5m]))",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "#56A64B",
+                  "value": null
+                },
+                {
+                  "color": "#F2CC0C",
+                  "value": 10
+                },
+                {
+                  "color": "#E02F44",
+                  "value": 50
+                }
+              ]
+            },
+            "unit": "reqps",
+            "decimals": 2
+          }
+        },
+        "options": {
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 6,
+          "x": 0,
+          "y": 16
+        }
+      },
+      {
+        "id": 6,
+        "title": "📱 Screener App Request Rate",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(rate(flask_http_request_total{app=\"screener-app\"}[5m]))",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "#3274D9",
+                  "value": null
+                },
+                {
+                  "color": "#F2CC0C",
+                  "value": 10
+                },
+                {
+                  "color": "#E02F44",
+                  "value": 50
+                }
+              ]
+            },
+            "unit": "reqps",
+            "decimals": 2
+          }
+        },
+        "options": {
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 6,
+          "x": 6,
+          "y": 16
+        }
+      },
+      {
+        "id": 7,
+        "title": "🌐 WebApp Pod Count",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "count(up{app=\"webapp\"})",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "#73BF69",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "short",
+            "decimals": 0
+          }
+        },
+        "options": {
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center"
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 6,
+          "x": 12,
+          "y": 16
+        }
+      },
+      {
+        "id": 8,
+        "title": "📱 Screener App Pod Count",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "count(up{app=\"screener-app\"})",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "#FF9830",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "short",
+            "decimals": 0
+          }
+        },
+        "options": {
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center"
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 6,
+          "x": 18,
+          "y": 16
+        }
+      },
+      {
+        "id": 9,
+        "title": "🐍 Python GC Collections",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "rate(python_gc_collections_total{app=\"webapp\"}[5m])",
+            "refId": "A",
+            "legendFormat": "WebApp - Gen {{generation}}"
+          },
+          {
+            "expr": "rate(python_gc_collections_total{app=\"screener-app\"}[5m])",
+            "refId": "B",
+            "legendFormat": "Screener - Gen {{generation}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "ops"
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "bottom"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 22
+        }
+      },
+      {
+        "id": 10,
+        "title": "📊 Application Response Times",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "flask_http_request_duration_seconds{app=\"webapp\", quantile=\"0.95\"}",
+            "refId": "A",
+            "legendFormat": "WebApp 95th percentile"
+          },
+          {
+            "expr": "flask_http_request_duration_seconds{app=\"screener-app\", quantile=\"0.95\"}",
+            "refId": "B",
+            "legendFormat": "Screener 95th percentile"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "s",
+            "min": 0
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "bottom"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 30
+        }
+      }
+    ],
+    "time": {
+      "from": "now-15m",
+      "to": "now"
+    },
+    "refresh": "30s",
+    "style": "dark",
+    "theme": "dark"
+  }
+}

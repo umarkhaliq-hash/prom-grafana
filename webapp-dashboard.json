@@ -1,0 +1,146 @@
+{
+  "id": null,
+  "title": "Webapp Monitoring Dashboard",
+  "tags": ["webapp"],
+  "timezone": "browser",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Webapp CPU Usage",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{pod=\"webapp-deployment-54d67c9885-5jknp\", id=~\".*/kubepods/.*\"}[5m]) * 100",
+          "legendFormat": "CPU %"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 4
+        }
+      },
+      "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0}
+    },
+    {
+      "id": 2,
+      "title": "Webapp Memory Usage",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "container_memory_usage_bytes{pod=\"webapp-deployment-54d67c9885-5jknp\", id=~\".*/kubepods/.*\"}",
+          "legendFormat": "Memory"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "gridPos": {"h": 8, "w": 6, "x": 6, "y": 0}
+    },
+    {
+      "id": 3,
+      "title": "Process Memory",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes{instance=\"10.244.0.51:4000\"}",
+          "legendFormat": "RSS Memory"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "gridPos": {"h": 8, "w": 6, "x": 12, "y": 0}
+    },
+    {
+      "id": 4,
+      "title": "Process CPU Time",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "rate(process_cpu_seconds_total{instance=\"10.244.0.51:4000\"}[5m]) * 100",
+          "legendFormat": "CPU %"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        }
+      },
+      "gridPos": {"h": 8, "w": 6, "x": 18, "y": 0}
+    },
+    {
+      "id": 5,
+      "title": "Container CPU Over Time",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{pod=\"webapp-deployment-54d67c9885-5jknp\"}[5m]) * 100",
+          "legendFormat": "{{container}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+    },
+    {
+      "id": 6,
+      "title": "Container Memory Over Time",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "container_memory_usage_bytes{pod=\"webapp-deployment-54d67c9885-5jknp\"}",
+          "legendFormat": "{{container}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+    },
+    {
+      "id": 7,
+      "title": "Python GC Collections",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(python_gc_collections_total{instance=\"10.244.0.51:4000\"}[5m])",
+          "legendFormat": "Gen {{generation}}"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16}
+    },
+    {
+      "id": 8,
+      "title": "Process Info",
+      "type": "table",
+      "targets": [
+        {
+          "expr": "process_virtual_memory_bytes{instance=\"10.244.0.51:4000\"}",
+          "format": "table"
+        },
+        {
+          "expr": "process_open_fds{instance=\"10.244.0.51:4000\"}",
+          "format": "table"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16}
+    }
+  ],
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "refresh": "5s",
+  "schemaVersion": 30,
+  "version": 1
+}

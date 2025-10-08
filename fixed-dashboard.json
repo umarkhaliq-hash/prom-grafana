@@ -1,0 +1,200 @@
+{
+  "id": null,
+  "title": "Complete Apps Monitoring Dashboard - FIXED",
+  "tags": ["webapp", "screener-app", "monitoring"],
+  "timezone": "browser",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Apps Status Overview",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "up{instance=\"10.244.0.11:4000\"}",
+          "legendFormat": "Webapp"
+        },
+        {
+          "expr": "up{instance=\"10.244.0.10:5000\"}",
+          "legendFormat": "Screener-App"
+        }
+      ],
+      "gridPos": {"h": 6, "w": 8, "x": 0, "y": 0}
+    },
+    {
+      "id": 2,
+      "title": "Total Pods Running",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "count(kube_pod_info)",
+          "legendFormat": "Running Pods"
+        }
+      ],
+      "gridPos": {"h": 6, "w": 8, "x": 8, "y": 0}
+    },
+    {
+      "id": 3,
+      "title": "Node Resource Usage",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "100 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100)",
+          "legendFormat": "Memory %"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        }
+      },
+      "gridPos": {"h": 6, "w": 8, "x": 16, "y": 0}
+    },
+    {
+      "id": 4,
+      "title": "Apps CPU Usage Comparison",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(process_cpu_seconds_total{instance=\"10.244.0.11:4000\"}[5m]) * 100",
+          "legendFormat": "Webapp CPU"
+        },
+        {
+          "expr": "rate(process_cpu_seconds_total{instance=\"10.244.0.10:5000\"}[5m]) * 100",
+          "legendFormat": "Screener-App CPU"
+        },
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{pod=\"webapp-deployment-85596dbcb-qhpt4\"}[5m]) * 100",
+          "legendFormat": "Webapp Container"
+        },
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{pod=\"screener-deployment-79f6cbd648-rsxx8\"}[5m]) * 100",
+          "legendFormat": "Screener Container"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 6}
+    },
+    {
+      "id": 5,
+      "title": "Apps Memory Usage Comparison",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes{instance=\"10.244.0.11:4000\"}",
+          "legendFormat": "Webapp RSS"
+        },
+        {
+          "expr": "process_resident_memory_bytes{instance=\"10.244.0.10:5000\"}",
+          "legendFormat": "Screener-App RSS"
+        },
+        {
+          "expr": "container_memory_usage_bytes{pod=\"webapp-deployment-85596dbcb-qhpt4\"}",
+          "legendFormat": "Webapp Container"
+        },
+        {
+          "expr": "container_memory_usage_bytes{pod=\"screener-deployment-79f6cbd648-rsxx8\"}",
+          "legendFormat": "Screener Container"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 6}
+    },
+    {
+      "id": 6,
+      "title": "Network Traffic - All Apps",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(container_network_receive_bytes_total{pod=~\"webapp-deployment.*\"}[5m])",
+          "legendFormat": "Webapp RX"
+        },
+        {
+          "expr": "rate(container_network_transmit_bytes_total{pod=~\"webapp-deployment.*\"}[5m])",
+          "legendFormat": "Webapp TX"
+        },
+        {
+          "expr": "rate(container_network_receive_bytes_total{pod=~\"screener-deployment.*\"}[5m])",
+          "legendFormat": "Screener RX"
+        },
+        {
+          "expr": "rate(container_network_transmit_bytes_total{pod=~\"screener-deployment.*\"}[5m])",
+          "legendFormat": "Screener TX"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 14}
+    },
+    {
+      "id": 7,
+      "title": "File Descriptors Usage",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "process_open_fds{instance=\"10.244.0.11:4000\"}",
+          "legendFormat": "Webapp FDs"
+        },
+        {
+          "expr": "process_open_fds{instance=\"10.244.0.10:5000\"}",
+          "legendFormat": "Screener-App FDs"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 14}
+    },
+    {
+      "id": 8,
+      "title": "Python Garbage Collection - Both Apps",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(python_gc_collections_total{instance=\"10.244.0.11:4000\"}[5m])",
+          "legendFormat": "Webapp Gen {{generation}}"
+        },
+        {
+          "expr": "rate(python_gc_collections_total{instance=\"10.244.0.10:5000\"}[5m])",
+          "legendFormat": "Screener Gen {{generation}}"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 22}
+    },
+    {
+      "id": 9,
+      "title": "Virtual Memory Usage",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "process_virtual_memory_bytes{instance=\"10.244.0.11:4000\"}",
+          "legendFormat": "Webapp Virtual"
+        },
+        {
+          "expr": "process_virtual_memory_bytes{instance=\"10.244.0.10:5000\"}",
+          "legendFormat": "Screener Virtual"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 22}
+    }
+  ],
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "refresh": "5s",
+  "schemaVersion": 30,
+  "version": 1
+}

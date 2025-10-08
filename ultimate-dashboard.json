@@ -1,0 +1,329 @@
+{
+  "id": null,
+  "title": "Ultimate Apps & Pod Monitoring Dashboard",
+  "tags": ["webapp", "screener-app", "pods", "monitoring"],
+  "timezone": "browser",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Pod Status Overview",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "count(kube_pod_info{pod=~\"webapp-deployment.*\"})",
+          "legendFormat": "Webapp Pods"
+        },
+        {
+          "expr": "count(kube_pod_info{pod=~\"screener-deployment.*\"})",
+          "legendFormat": "Screener Pods"
+        }
+      ],
+      "gridPos": {"h": 6, "w": 8, "x": 0, "y": 0}
+    },
+    {
+      "id": 2,
+      "title": "Pod CPU Usage %",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{pod=~\"webapp-deployment.*\", container!=\"POD\"}[5m]) * 100",
+          "legendFormat": "Webapp CPU"
+        },
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{pod=~\"screener-deployment.*\", container!=\"POD\"}[5m]) * 100",
+          "legendFormat": "Screener CPU"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 2
+        }
+      },
+      "gridPos": {"h": 6, "w": 8, "x": 8, "y": 0}
+    },
+    {
+      "id": 3,
+      "title": "Pod Memory Usage",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "container_memory_usage_bytes{pod=~\"webapp-deployment.*\", container!=\"POD\"}",
+          "legendFormat": "Webapp Memory"
+        },
+        {
+          "expr": "container_memory_usage_bytes{pod=~\"screener-deployment.*\", container!=\"POD\"}",
+          "legendFormat": "Screener Memory"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "gridPos": {"h": 6, "w": 8, "x": 16, "y": 0}
+    },
+    {
+      "id": 4,
+      "title": "Pod CPU Usage Over Time",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{pod=~\"webapp-deployment.*\", container!=\"POD\"}[5m]) * 100",
+          "legendFormat": "{{pod}} CPU"
+        },
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{pod=~\"screener-deployment.*\", container!=\"POD\"}[5m]) * 100",
+          "legendFormat": "{{pod}} CPU"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 6}
+    },
+    {
+      "id": 5,
+      "title": "Pod Memory Usage Over Time",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "container_memory_usage_bytes{pod=~\"webapp-deployment.*\", container!=\"POD\"}",
+          "legendFormat": "{{pod}} Memory"
+        },
+        {
+          "expr": "container_memory_usage_bytes{pod=~\"screener-deployment.*\", container!=\"POD\"}",
+          "legendFormat": "{{pod}} Memory"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 6}
+    },
+    {
+      "id": 6,
+      "title": "Pod Network I/O",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(container_network_receive_bytes_total{pod=~\"webapp-deployment.*\"}[5m])",
+          "legendFormat": "{{pod}} RX"
+        },
+        {
+          "expr": "rate(container_network_transmit_bytes_total{pod=~\"webapp-deployment.*\"}[5m])",
+          "legendFormat": "{{pod}} TX"
+        },
+        {
+          "expr": "rate(container_network_receive_bytes_total{pod=~\"screener-deployment.*\"}[5m])",
+          "legendFormat": "{{pod}} RX"
+        },
+        {
+          "expr": "rate(container_network_transmit_bytes_total{pod=~\"screener-deployment.*\"}[5m])",
+          "legendFormat": "{{pod}} TX"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 14}
+    },
+    {
+      "id": 7,
+      "title": "Pod Filesystem Usage",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "container_fs_usage_bytes{pod=~\"webapp-deployment.*\", container!=\"POD\"}",
+          "legendFormat": "{{pod}} FS Usage"
+        },
+        {
+          "expr": "container_fs_usage_bytes{pod=~\"screener-deployment.*\", container!=\"POD\"}",
+          "legendFormat": "{{pod}} FS Usage"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 14}
+    },
+    {
+      "id": 8,
+      "title": "Pod Restart Count",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(kube_pod_container_status_restarts_total{pod=~\"webapp-deployment.*\"})",
+          "legendFormat": "Webapp Restarts"
+        },
+        {
+          "expr": "sum(kube_pod_container_status_restarts_total{pod=~\"screener-deployment.*\"})",
+          "legendFormat": "Screener Restarts"
+        }
+      ],
+      "gridPos": {"h": 6, "w": 8, "x": 0, "y": 22}
+    },
+    {
+      "id": 9,
+      "title": "Pod Age",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "(time() - kube_pod_start_time{pod=~\"webapp-deployment.*\"}) / 3600",
+          "legendFormat": "Webapp Age (hours)"
+        },
+        {
+          "expr": "(time() - kube_pod_start_time{pod=~\"screener-deployment.*\"}) / 3600",
+          "legendFormat": "Screener Age (hours)"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "h",
+          "decimals": 1
+        }
+      },
+      "gridPos": {"h": 6, "w": 8, "x": 8, "y": 22}
+    },
+    {
+      "id": 10,
+      "title": "Pod Ready Status",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(kube_pod_status_ready{pod=~\"webapp-deployment.*\", condition=\"true\"})",
+          "legendFormat": "Webapp Ready"
+        },
+        {
+          "expr": "sum(kube_pod_status_ready{pod=~\"screener-deployment.*\", condition=\"true\"})",
+          "legendFormat": "Screener Ready"
+        }
+      ],
+      "gridPos": {"h": 6, "w": 8, "x": 16, "y": 22}
+    },
+    {
+      "id": 11,
+      "title": "Detailed Pod Information Table",
+      "type": "table",
+      "targets": [
+        {
+          "expr": "kube_pod_info{pod=~\"(webapp|screener)-deployment.*\"}",
+          "format": "table"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 28}
+    },
+    {
+      "id": 12,
+      "title": "Container Resource Limits vs Usage",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "container_spec_memory_limit_bytes{pod=~\"webapp-deployment.*\", container!=\"POD\"}",
+          "legendFormat": "{{pod}} Memory Limit"
+        },
+        {
+          "expr": "container_memory_usage_bytes{pod=~\"webapp-deployment.*\", container!=\"POD\"}",
+          "legendFormat": "{{pod}} Memory Usage"
+        },
+        {
+          "expr": "container_spec_memory_limit_bytes{pod=~\"screener-deployment.*\", container!=\"POD\"}",
+          "legendFormat": "{{pod}} Memory Limit"
+        },
+        {
+          "expr": "container_memory_usage_bytes{pod=~\"screener-deployment.*\", container!=\"POD\"}",
+          "legendFormat": "{{pod}} Memory Usage"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 28}
+    },
+    {
+      "id": 13,
+      "title": "Application Process Metrics",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes{instance=\"10.244.0.11:4000\"}",
+          "legendFormat": "Webapp RSS Memory"
+        },
+        {
+          "expr": "process_resident_memory_bytes{instance=\"10.244.0.10:5000\"}",
+          "legendFormat": "Screener RSS Memory"
+        },
+        {
+          "expr": "process_open_fds{instance=\"10.244.0.11:4000\"}",
+          "legendFormat": "Webapp File Descriptors"
+        },
+        {
+          "expr": "process_open_fds{instance=\"10.244.0.10:5000\"}",
+          "legendFormat": "Screener File Descriptors"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 36}
+    },
+    {
+      "id": 14,
+      "title": "Python Application Metrics",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(python_gc_collections_total{instance=\"10.244.0.11:4000\"}[5m])",
+          "legendFormat": "Webapp GC Gen {{generation}}"
+        },
+        {
+          "expr": "rate(python_gc_collections_total{instance=\"10.244.0.10:5000\"}[5m])",
+          "legendFormat": "Screener GC Gen {{generation}}"
+        },
+        {
+          "expr": "process_virtual_memory_bytes{instance=\"10.244.0.11:4000\"}",
+          "legendFormat": "Webapp Virtual Memory"
+        },
+        {
+          "expr": "process_virtual_memory_bytes{instance=\"10.244.0.10:5000\"}",
+          "legendFormat": "Screener Virtual Memory"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 36}
+    },
+    {
+      "id": 15,
+      "title": "Node & Cluster Overview",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "node_load1",
+          "legendFormat": "Node Load 1m"
+        },
+        {
+          "expr": "100 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100)",
+          "legendFormat": "Node Memory Usage %"
+        },
+        {
+          "expr": "count(kube_pod_info)",
+          "legendFormat": "Total Pods"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 44}
+    }
+  ],
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "refresh": "5s",
+  "schemaVersion": 30,
+  "version": 1
+}
